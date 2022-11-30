@@ -1,6 +1,4 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.PrimitiveIterator;
 
 public class Basket implements Serializable {
     private String[] items;
@@ -38,6 +36,14 @@ public class Basket implements Serializable {
         System.out.println("Итого: " + cartSum + " руб." + "\n");
     }
 
+    public void saveBin(File file) throws Exception {
+
+        try (ObjectOutputStream saver = new ObjectOutputStream(new FileOutputStream(file))) {
+            Basket basket = new Basket(this.items, this.prices, this.cart);
+            saver.writeObject(basket);
+        }
+    }
+
     public void saveTxt(File textFile) throws Exception {
         try (PrintWriter out = new PrintWriter(textFile)) {
             for (String item : items) {
@@ -52,6 +58,14 @@ public class Basket implements Serializable {
                 out.print(position + " ");
             }
         }
+    }
+
+    public static Basket loadFromBinFile(File file) throws Exception {
+        Basket basket1;
+        try (ObjectInputStream restore = new ObjectInputStream(new FileInputStream(file))) {
+            basket1 = (Basket) restore.readObject();
+        }
+        return basket1;
     }
 
     public static Basket loadFromTextFile(File textFile) throws Exception {
@@ -71,22 +85,6 @@ public class Basket implements Serializable {
             basket = new Basket(items, prices, cart);
         }
         return basket;
-    }
-
-    public String[] getItems() {
-        return items;
-    }
-
-    public void setItems(String[] items) {
-        this.items = items;
-    }
-
-    public int[] getPrices() {
-        return prices;
-    }
-
-    public void setPrices(int[] prices) {
-        this.prices = prices;
     }
 
     public void PrintItems() {
