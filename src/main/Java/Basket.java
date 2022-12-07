@@ -1,3 +1,4 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -94,6 +95,7 @@ public class Basket implements Serializable {
     }
 
     public static Basket loadFromJson(File jsonFile) throws IOException {
+
         try (Scanner sc = new Scanner(jsonFile)) {
             Gson gson = new Gson();
             String data = sc.nextLine();
