@@ -1,12 +1,16 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import javax.swing.*;
 import java.io.*;
 import java.util.Arrays;
 import java.util.PrimitiveIterator;
+import java.util.Scanner;
 
 public class Basket implements Serializable {
     private String[] items;
     private int[] prices;
     private int[] cart;
-    private File file = new File("src");
 
     public Basket(String[] items, int[] prices) {
         this.items = items;
@@ -73,26 +77,28 @@ public class Basket implements Serializable {
         return basket;
     }
 
-    public String[] getItems() {
-        return items;
-    }
-
-    public void setItems(String[] items) {
-        this.items = items;
-    }
-
-    public int[] getPrices() {
-        return prices;
-    }
-
-    public void setPrices(int[] prices) {
-        this.prices = prices;
-    }
-
     public void PrintItems() {
         System.out.println("Товары, доступные для покупки: ");
         for (int i = 0; i < items.length; i++) {
             System.out.println("\t" + (i +1) + " " + items[i] + " по цене " + prices[i] + " руб. за шт.");
+        }
+    }
+
+    public void saveJson(File jsonFile) throws IOException {
+
+        try (PrintWriter writer = new PrintWriter(jsonFile)) {
+            Gson gson = new Gson();
+            String json = gson.toJson(this);
+            writer.println(json);
+        }
+    }
+
+    public static Basket loadFromJson(File jsonFile) throws IOException {
+        try (Scanner sc = new Scanner(jsonFile)) {
+            Gson gson = new Gson();
+            String data = sc.nextLine();
+            Basket basket = gson.fromJson(data, Basket.class);
+            return basket;
         }
     }
 }
